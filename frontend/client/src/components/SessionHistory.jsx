@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, MessageSquare, Star, TrendingUp, Plus } from 'lucide-react';
 import { getToken, getUser } from '../utils/auth';
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-const API_BASE = 'http://localhost:8000';
+// const API_BASE = 'http://localhost:8000';
 
 const SessionHistory = () => {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const SessionHistory = () => {
       setLoading(true);
       try {
         const userId = getUserId();
-        const res = await fetch(`${API_BASE}/history/${userId}`, {
+        const res = await fetch(`${apiUrl}/history/${userId}`, {
           headers: { Authorization: `Bearer ${getToken()}` }
         });
         const data = await res.json();

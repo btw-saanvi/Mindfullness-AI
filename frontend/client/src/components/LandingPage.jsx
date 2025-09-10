@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { MessageCircle, Heart, Brain, Lightbulb, ArrowRight, Star } from 'lucide-react';
 import { isLoggedIn } from '../utils/auth';
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const LandingPage = ({ userPreferences, setUserPreferences }) => {
   const navigate = useNavigate();
@@ -246,7 +247,7 @@ const LandingPage = ({ userPreferences, setUserPreferences }) => {
           </div>
           
           <div className="footer-bottom">
-            <p>© 2024 MindfulAI. Designed for mental wellness.</p>
+            <p>Designed for mental wellness and Always having someone to talk to.....</p>
           </div>
         </div>
       </footer>

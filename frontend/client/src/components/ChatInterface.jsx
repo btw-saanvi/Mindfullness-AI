@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Heart, Lightbulb, Brain, Leaf, History, Sparkles } from 'lucide-react';
 import axios from 'axios';
 import { getToken } from '../utils/auth';
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const ChatInterface = ({ userPreferences }) => {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ const ChatInterface = ({ userPreferences }) => {
       id: 'calm', 
       name: 'Calm', 
       icon: Heart, 
-      description: 'Gentle and soothing conversations',
+      description: 'Talk about whatever weights on your heart!',
       color: '#60a5fa'
     },
     { 
@@ -94,7 +95,7 @@ const ChatInterface = ({ userPreferences }) => {
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:8000/chat', {
+      const response = await axios.post(`${apiUrl}/chat`, {
         user_id: getUserId(),
         message: text,
         gender: userPreferences.gender,
