@@ -1,5 +1,5 @@
-from fastapi import FastAPI, HTTPException, Header, Depends
-from fastapi.middleware.cors import CORSMiddleware   # ✅ Added
+from fastapi import FastAPI, HTTPException, Header
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import os
 import google.generativeai as genai
@@ -11,12 +11,19 @@ from google.auth.transport import requests as google_requests
 
 app = FastAPI()
 
+# ✅ Allowed origins (local + deployed frontend)
+origins = [
+    "http://localhost:5173",                  # local Vite frontend
+    "http://localhost:3000",                  # local CRA frontend
+    "https://mindfullness-ai.netlify.app",    # deployed frontend (Netlify)
+]
+
 # ✅ Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Frontend (Vite) origin
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["*"],   # you can restrict to ["GET", "POST"] if needed
     allow_headers=["*"],
 )
 
