@@ -1,4 +1,4 @@
-# MindfulAI: What-If Simulator
+# MindfulAI: AI genz therapist 
 
 MindfulAI is a compassionate AI-powered therapy simulator that provides users with a safe, judgment-free space to talk, reflect, and grow. Built with FastAPI (backend) and React (frontend), MindfulAI offers personalized mental health support using evidence-based therapeutic approaches, including CBT, mindfulness, motivational interviewing, and more.
 
