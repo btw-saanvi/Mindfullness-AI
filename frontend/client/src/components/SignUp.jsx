@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { setUser } from '../utils/auth';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import Logo from './Logo';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const SignUp = () => {
     setError('');
     if (!form.name || !form.email || !form.password) return setError('All fields are required');
     if (form.password !== form.confirmPassword) return setError('Passwords do not match');
-    if (!agreeToTerms) return setError('Please agree to the Terms of Service and Privacy Policy');
+    if (!agreeToTerms) return setError('Please accept the Terms of Service and Privacy Policy');
     const user = { id: `user_${Date.now()}`, name: form.name, email: form.email };
     setUser(user);
     navigate('/chat');
@@ -30,29 +31,20 @@ const SignUp = () => {
   return (
     <div className="signup-page">
       <div className="signup-container">
-        {/* Logo */}
-        <div className="signup-logo">
-          <div className="logo-icon">
-            <div className="logo-inner"></div>
-            <div className="logo-ring"></div>
-            <div className="logo-gradient"></div>
-          </div>
-        </div>
-
-        {/* Header */}
         <div className="signup-header">
-          <h1>Join Us Today</h1>
-          <p>Start your mental wellness journey with personalized AI therapy.</p>
+          <div style={{ textAlign: 'center', marginBottom: 16 }}>
+            <Logo onClick={() => navigate('/')} />
+          </div>
+          <h1>Create Account</h1>
+          <p>Begin your gentle mindfulness & reflection journey</p>
         </div>
 
-        {/* Form */}
         <form className="signup-form" onSubmit={onSubmit}>
           {error && <div className="signup-error">{error}</div>}
 
-          {/* Full Name */}
           <div className="form-group">
             <label>Full Name</label>
-            <div className="input-container">
+            <div className="input-container" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <User className="input-icon" />
               <input 
                 name="name" 
@@ -64,25 +56,23 @@ const SignUp = () => {
             </div>
           </div>
 
-          {/* Email */}
           <div className="form-group">
-            <label>Email</label>
-            <div className="input-container">
+            <label>Email Address</label>
+            <div className="input-container" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <Mail className="input-icon" />
               <input 
                 name="email" 
                 type="email" 
                 value={form.email} 
                 onChange={onChange} 
-                placeholder="Enter your email" 
+                placeholder="you@example.com" 
               />
             </div>
           </div>
 
-          {/* Password */}
           <div className="form-group">
             <label>Password</label>
-            <div className="input-container">
+            <div className="input-container" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <Lock className="input-icon" />
               <input 
                 name="password" 
@@ -96,15 +86,14 @@ const SignUp = () => {
                 className="password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? <EyeOff /> : <Eye />}
+                {showPassword ? <EyeOff style={{ width: 16, height: 16 }} /> : <Eye style={{ width: 16, height: 16 }} />}
               </button>
             </div>
           </div>
 
-          {/* Confirm Password */}
           <div className="form-group">
             <label>Confirm Password</label>
-            <div className="input-container">
+            <div className="input-container" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
               <Lock className="input-icon" />
               <input 
                 name="confirmPassword" 
@@ -118,44 +107,29 @@ const SignUp = () => {
                 className="password-toggle"
                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               >
-                {showConfirmPassword ? <EyeOff /> : <Eye />}
+                {showConfirmPassword ? <EyeOff style={{ width: 16, height: 16 }} /> : <Eye style={{ width: 16, height: 16 }} />}
               </button>
             </div>
           </div>
 
-          {/* Terms Checkbox */}
-          <div className="terms-container">
+          <div className="terms-container" style={{ margin: '12px 0' }}>
             <input 
               id="terms" 
               type="checkbox" 
               checked={agreeToTerms} 
               onChange={(e) => setAgreeToTerms(e.target.checked)} 
             />
-            <label htmlFor="terms">
-              I agree to the <span className="terms-link">Terms of Service</span> and <span className="terms-link">Privacy Policy</span>
+            <label htmlFor="terms" style={{ cursor: 'pointer', margin: 0 }}>
+              I agree to the <span className="auth-link">Terms of Service</span> and <span className="auth-link">Privacy Policy</span>
             </label>
           </div>
 
-          {/* Create Account Button */}
           <button className="create-account-btn" type="submit">
             Create Account
           </button>
 
-          {/* Divider */}
-          <div className="divider">
-            <span>OR SIGN UP WITH</span>
-          </div>
-
-          {/* Social Buttons */}
-          <div className="social-buttons">
-            <button type="button" className="social-btn google-btn">
-              <div className="social-icon">G</div>
-              Google
-            </button>
-            <button type="button" className="social-btn twitter-btn">
-              <div className="social-icon twitter-icon">🐦</div>
-              Twitter
-            </button>
+          <div className="auth-footer">
+            Already have an account? <span className="auth-link" onClick={() => navigate('/signin')}>Sign in</span>
           </div>
         </form>
       </div>

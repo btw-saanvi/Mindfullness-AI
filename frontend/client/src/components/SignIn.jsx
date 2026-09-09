@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUser, setUser, setToken, parseJwt } from '../utils/auth';
 import { GoogleLogin } from '@react-oauth/google';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import Logo from './Logo';
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ email: '', password: '' });
   const [remember, setRemember] = useState(false);
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -17,7 +20,7 @@ const SignIn = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     setError('');
-    if (!form.email || !form.password) return setError('Enter email and password');
+    if (!form.email || !form.password) return setError('Please enter both email and password');
     let user = getUser();
     if (!user || user.email !== form.email) {
       user = { id: `user_${Date.now()}`, name: form.email.split('@')[0], email: form.email };
@@ -38,34 +41,81 @@ const SignIn = () => {
 
   return (
     <div className="auth-page">
-      <form className="auth-card" onSubmit={onSubmit}>
-        <h1>Welcome Back</h1>
-        <p className="auth-sub">Sign in to continue your journey to better mental health</p>
+      <div className="auth-card">
+        <div className="auth-header">
+          <div style={{ textAlign: 'center', marginBottom: 16 }}>
+            <Logo onClick={() => navigate('/')} />
+          </div>
+          <h1>Welcome Back</h1>
+          <p className="auth-sub">Sign in to return to your reflection companion</p>
+        </div>
 
         {error && <div className="auth-error">{error}</div>}
 
-        <label>Email</label>
-        <input name="email" type="email" value={form.email} onChange={onChange} placeholder="Enter your email" />
+        <form onSubmit={onSubmit}>
+          <div className="form-group">
+            <label>Email Address</label>
+            <div className="input-container" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <Mail className="input-icon" />
+              <input 
+                name="email" 
+                type="email" 
+                value={form.email} 
+                onChange={onChange} 
+                placeholder="you@example.com" 
+              />
+            </div>
+          </div>
 
-        <label>Password</label>
-        <input name="password" type="password" value={form.password} onChange={onChange} placeholder="Enter your password" />
+          <div className="form-group">
+            <label>Password</label>
+            <div className="input-container" style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <Lock className="input-icon" />
+              <input 
+                name="password" 
+                type={showPassword ? "text" : "password"} 
+                value={form.password} 
+                onChange={onChange} 
+                placeholder="Enter your password" 
+              />
+              <button 
+                type="button" 
+                className="password-toggle"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff style={{ width: 16, height: 16 }} /> : <Eye style={{ width: 16, height: 16 }} />}
+              </button>
+            </div>
+          </div>
 
-        <div className="auth-row">
-          <input id="remember" type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
-          <label htmlFor="remember"> Remember me</label>
+          <div className="auth-row">
+            <input id="remember" type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
+            <label htmlFor="remember" style={{ margin: 0, cursor: 'pointer' }}>Remember me</label>
+          </div>
+
+          <button className="auth-primary" type="submit">
+            Sign In
+          </button>
+        </form>
+
+        <div className="auth-divider">
+          <span>OR</span>
         </div>
 
-        <button className="auth-primary" type="submit">Sign In</button>
-
-        <div style={{ margin: '14px 0', textAlign: 'center', color: 'rgba(255,255,255,0.7)' }}>OR CONTINUE WITH</div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <GoogleLogin onSuccess={onGoogleSuccess} onError={() => setError('Google Sign-In failed')} useOneTap />
+        <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0' }}>
+          <GoogleLogin 
+            onSuccess={onGoogleSuccess} 
+            onError={() => setError('Google Sign-In failed')} 
+            useOneTap
+            theme="filled_black"
+            shape="pill"
+          />
         </div>
 
         <div className="auth-footer">
           Don't have an account? <span className="auth-link" onClick={() => navigate('/signup')}>Sign up</span>
         </div>
-      </form>
+      </div>
     </div>
   );
 };

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, MessageSquare, Star, TrendingUp, Plus } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 import { getToken, getUser } from '../utils/auth';
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import Logo from './Logo';
 
-// const API_BASE = 'http://localhost:8000';
+const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const SessionHistory = () => {
   const navigate = useNavigate();
@@ -50,46 +50,27 @@ const SessionHistory = () => {
   return (
     <div className="history-page">
       <div className="history-header">
-        <button className="back-button" onClick={() => navigate('/')}> 
-          <ArrowLeft />
-        </button>
-        <div className="header-text">
-          <h1>Session History</h1>
-          <p>Track your therapeutic journey and progress</p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <button className="back-button" onClick={() => navigate('/')} title="Home"> 
+            <ArrowLeft style={{ width: 18, height: 18 }} />
+          </button>
+          <Logo size="small" onClick={() => navigate('/')} />
         </div>
-        <button className="new-session" onClick={() => navigate('/chat')}>
-          <Plus /> New Session
-        </button>
-      </div>
 
-      <div className="history-stats">
-        <div className="stat-card">
-          <MessageSquare />
-          <div>
-            <div className="stat-number">{sessions.length}</div>
-            <div className="stat-label">Total Sessions</div>
-          </div>
+        <div className="header-text" style={{ marginLeft: 12 }}>
+          <h1 style={{ fontSize: '1.4rem' }}>Session History</h1>
         </div>
-        <div className="stat-card">
-          <TrendingUp />
-          <div>
-            <div className="stat-number">85%</div>
-            <div className="stat-label">Positive Outcomes</div>
-          </div>
-        </div>
-        <div className="stat-card">
-          <Star />
-          <div>
-            <div className="stat-number">2</div>
-            <div className="stat-label">Favorites</div>
-          </div>
-        </div>
+
+        <button className="btn-pastel-blue" onClick={() => navigate('/chat')} style={{ marginLeft: 'auto' }}>
+          <Plus style={{ width: 16, height: 16 }} />
+          New Session
+        </button>
       </div>
 
       <div className="history-search">
         <input
           type="text"
-          placeholder="Search your sessions..."
+          placeholder="Search past sessions..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
@@ -97,21 +78,26 @@ const SessionHistory = () => {
 
       <div className="history-list">
         {loading ? (
-          <div className="history-loading">Loading...</div>
+          <div style={{ color: '#94a3b8', textAlign: 'center', padding: 40 }}>Loading history...</div>
         ) : filtered.length === 0 ? (
-          <div className="history-empty">No sessions yet. Start a new session to begin your journey.</div>
+          <div style={{ color: '#94a3b8', textAlign: 'center', padding: 40 }}>
+            No past sessions found. Start a new session to begin reflecting.
+          </div>
         ) : (
           filtered.map((s) => (
             <div key={s.id} className="history-item">
-              <div className="history-item-header">
-                <div className="badge-style">{(s.style || 'Calm').charAt(0).toUpperCase() + (s.style || 'Calm').slice(1)}</div>
-                <div className="messages-count">{s.messages_count} messages</div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
+                <span className="badge-style" style={{ color: '#7dd3fc', border: '1px solid rgba(125,211,252,0.3)', background: 'rgba(125,211,252,0.1)' }}>
+                  {(s.style || 'Calm').charAt(0).toUpperCase() + (s.style || 'Calm').slice(1)} Mode
+                </span>
+                <span style={{ color: '#64748b', fontSize: '0.85rem' }}>{s.messages_count || 0} messages</span>
               </div>
               <div className="history-item-meta">
-                <span className="started">Started: {new Date(s.started_at).toLocaleString()}</span>
-                <span className="ended">Ended: {new Date(s.last_updated).toLocaleString()}</span>
+                <span>{s.started_at ? new Date(s.started_at).toLocaleDateString() : 'Recent'}</span>
               </div>
-              <div className="history-item-preview">{s.preview}</div>
+              <div className="history-item-preview">
+                {s.preview || 'No preview available.'}
+              </div>
             </div>
           ))
         )}

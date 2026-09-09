@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import { MessageCircle, Heart, Brain, Lightbulb, ArrowRight, Star } from 'lucide-react';
+import { MessageSquare, Brain, Wind, Compass, Sun, Lock, ShieldCheck, Clock, ArrowRight, PhoneCall } from 'lucide-react';
 import { isLoggedIn } from '../utils/auth';
-const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+import Logo from './Logo';
 
-const LandingPage = ({ userPreferences, setUserPreferences }) => {
+const LandingPage = () => {
   const navigate = useNavigate();
 
   const handleStartTalking = () => {
@@ -14,240 +14,247 @@ const LandingPage = ({ userPreferences, setUserPreferences }) => {
     }
   };
 
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="landing-page">
-      {/* Hero Section */}
+      {/* Navigation Header */}
+      <nav className="main-nav">
+        <div className="container nav-container">
+          <Logo onClick={() => navigate('/')} />
+
+          <ul className="nav-links">
+            <li className="nav-link-item" onClick={() => scrollToSection('tools')}>Therapeutic Tools</li>
+            <li className="nav-link-item" onClick={() => scrollToSection('flow')}>Session Flow</li>
+            <li className="nav-link-item" onClick={() => scrollToSection('safety')}>Safety & Boundaries</li>
+          </ul>
+
+          <div className="nav-actions">
+            {isLoggedIn() ? (
+              <>
+                <button className="btn-outline-warm" onClick={() => navigate('/dashboard')}>
+                  Dashboard
+                </button>
+                <button className="btn-pastel-blue" onClick={() => navigate('/chat')}>
+                  Open Companion
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="btn-outline-warm" onClick={() => navigate('/signin')}>
+                  Sign In
+                </button>
+                <button className="btn-pastel-blue" onClick={handleStartTalking}>
+                  Begin Session
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      {/* Hero Section (Original Hero Background Preserved) */}
       <section className="hero-section">
         <div className="hero-content">
+          <div className="disclaimer-pill">
+            <Wind style={{ width: 14, height: 14 }} />
+            <span>Mental Wellness & Reflection Companion</span>
+          </div>
+
           <h1 className="hero-title">MindfulAI</h1>
-          <p className="hero-tagline">Your pocket-sized therapist, always here to listen.</p>
+          <p className="hero-tagline">A safe, judgment-free space to talk, reflect, and grow.</p>
           <p className="hero-description">
-            Experience compassionate AI therapy that adapts to your needs, available 24/7 in a safe, judgment-free space.
+            Experience structured reflection tools, CBT thought reframing worksheets, guided 4-7-8 breathing exercises, 
+            and compassionate conversation whenever you need clarity.
           </p>
+
           <div className="hero-cta-row">
-            <button className="cta-button" onClick={handleStartTalking}>
-              <MessageCircle className="button-icon" />
-              Start Talking
+            <button className="btn-pastel-blue" onClick={handleStartTalking} style={{ padding: '14px 32px', fontSize: '1.02rem' }}>
+              <MessageSquare style={{ width: 18, height: 18 }} />
+              Start Reflection Session
             </button>
-            <button className="cta-button outline" onClick={() => navigate('/signin')}>
-              Sign In
+            {isLoggedIn() && (
+              <button className="btn-outline-warm" onClick={() => navigate('/dashboard')} style={{ padding: '14px 28px', fontSize: '1.02rem' }}>
+                View Mood Dashboard
+              </button>
+            )}
+          </div>
+
+          <div className="hero-trust-row">
+            <span><Lock style={{ width: 14, height: 14 }} /> 100% Confidential</span>
+            <span className="hero-trust-dot">•</span>
+            <span><Clock style={{ width: 14, height: 14 }} /> Available 24/7</span>
+            <span className="hero-trust-dot">•</span>
+            <span><ShieldCheck style={{ width: 14, height: 14 }} /> Non-Clinical Companion</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Interactive Tools Section */}
+      <section id="tools">
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Tangible Reflection Tools</h2>
+            <p className="section-subtitle">Structured tools built around established wellness techniques</p>
+          </div>
+
+          <div className="warm-grid">
+            <div className="warm-card">
+              <div className="warm-card-icon">
+                <Brain style={{ width: 22, height: 22 }} />
+              </div>
+              <h3>CBT Thought Reframing</h3>
+              <p>Unpack unhelpful automatic assumptions by identifying counter-evidence and establishing balanced perspectives.</p>
+            </div>
+
+            <div className="warm-card">
+              <div className="warm-card-icon">
+                <Wind style={{ width: 22, height: 22 }} />
+              </div>
+              <h3>Guided 4-7-8 Breathing</h3>
+              <p>Animated rhythm visualizer designed to help soothe an activated nervous system and restore calm presence.</p>
+            </div>
+
+            <div className="warm-card">
+              <div className="warm-card-icon">
+                <Sun style={{ width: 22, height: 22 }} />
+              </div>
+              <h3>Mood & Streak Dashboard</h3>
+              <p>Log mood entries per session and view gentle pattern insights into your recurring stressors over time.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Structured Session Flow */}
+      <section id="flow" style={{ background: 'rgba(15,23,42,0.4)' }}>
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title">Structured Session Flow</h2>
+            <p className="section-subtitle">More than just open-ended chat—guided reflection from start to finish</p>
+          </div>
+
+          <div className="warm-grid">
+            <div className="warm-card">
+              <div style={{ color: '#7dd3fc', fontWeight: 600, fontSize: '0.88rem', marginBottom: 8 }}>STEP 01</div>
+              <h3>Pick Your Need</h3>
+              <p>Select your entry focus and log your current mood score before starting.</p>
+            </div>
+
+            <div className="warm-card">
+              <div style={{ color: '#7dd3fc', fontWeight: 600, fontSize: '0.88rem', marginBottom: 8 }}>STEP 02</div>
+              <h3>Animated Listening Companion</h3>
+              <p>Write in a comfortable journal-like environment with an animated listening companion orb.</p>
+            </div>
+
+            <div className="warm-card">
+              <div style={{ color: '#7dd3fc', fontWeight: 600, fontSize: '0.88rem', marginBottom: 8 }}>STEP 03</div>
+              <h3>Takeaway Summary Card</h3>
+              <p>Conclude your session with a generated recap card highlighting core themes and 1 takeaway.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Safety & Boundaries */}
+      <section id="safety">
+        <div className="container">
+          <div style={{
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 20,
+            padding: 40,
+            maxWidth: 800,
+            margin: '0 auto',
+            textAlign: 'center'
+          }}>
+            <ShieldCheck style={{ width: 36, height: 36, color: '#7dd3fc', margin: '0 auto 16px auto' }} />
+            <h2 className="section-title" style={{ fontSize: '1.8rem' }}>Safety & Non-Clinical Boundaries</h2>
+            <p style={{ color: '#94a3b8', fontSize: '0.98rem', lineHeight: 1.7, marginBottom: 20 }}>
+              MindfulAI is designed responsibly as an educational & reflective wellness companion. 
+              It does not diagnose medical conditions, prescribe medication, or replace licensed psychological care. 
+              Immediate 24/7 crisis hotlines (988, Crisis Text Line) are built directly into the system.
+            </p>
+            <button className="btn-pastel-blue" onClick={handleStartTalking}>
+              Begin Mindful Session
+              <ArrowRight style={{ width: 16, height: 16 }} />
             </button>
           </div>
-          <p className="hero-subtext">Completely private + Available 24/7</p>
         </div>
       </section>
 
-      {/* Journey to Wellness Section */}
-      <section className="journey-section">
+      {/* Improved 4-Column Footer */}
+      <footer className="footer-modern">
         <div className="container">
-          <h2 className="section-title">Your Journey to Wellness</h2>
-          <p className="section-subtitle">Simple steps to start your personalized therapy experience</p>
-          
-          <div className="steps-container">
-            <div className="step">
-              <div className="step-icon">1</div>
-              <h3>Choose Your Style</h3>
-              <p>Select from four therapeutic approaches: Calm conversations, Motivational support, CBT techniques, or Mindfulness practices.</p>
+          <div className="footer-grid">
+            {/* Column 1: Brand */}
+            <div className="footer-col-brand">
+              <Logo showText={true} />
+              <p>
+                A quiet, compassionate space for emotional reflection, CBT thought reframing, and daily mental wellness support.
+              </p>
+              <div style={{ display: 'flex', gap: 12, color: '#7dd3fc', fontSize: '0.85rem' }}>
+                <span>🔒 Confidential</span>
+                <span>•</span>
+                <span>🌿 Non-Clinical</span>
+              </div>
             </div>
-            <div className="step">
-              <div className="step-icon step-2">2</div>
-              <h3>Start Talking</h3>
-              <p>Share your thoughts and feelings in a safe, private space. Our AI responds with empathy and professional guidance.</p>
-            </div>
-            <div className="step">
-              <div className="step-icon">3</div>
-              <h3>Track Progress</h3>
-              <p>Monitor your emotional journey, review past sessions, and celebrate your growth with detailed insights.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Testimonials Section */}
-      <section className="testimonials-section">
-        <div className="container">
-          <h2 className="section-title testimonials-title">Transforming Lives Daily</h2>
-          <p className="section-subtitle">Real stories from people who found peace and clarity through MindfulAI</p>
-          
-          <div className="testimonials-container">
-            <div className="testimonial-card">
-              <div className="avatar">S</div>
-              <div className="user-info">
-                <h4>Sarah M.</h4>
-                <p>Marketing Manager</p>
-              </div>
-              <p className="testimonial-text">"MindfulAI has been a game-changer for my anxiety. The AI therapist is incredibly understanding and provides practical coping strategies."</p>
-              <div className="rating">
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-              </div>
+            {/* Column 2: Therapeutic Tools */}
+            <div>
+              <div className="footer-col-title">Reflection Tools</div>
+              <ul className="footer-col-links">
+                <li onClick={handleStartTalking}>Structured Need Picker</li>
+                <li onClick={() => navigate('/chat')}>CBT Thought Reframing</li>
+                <li onClick={() => navigate('/chat')}>Guided 4-7-8 Breathing</li>
+                <li onClick={() => navigate('/chat')}>5-4-3-2-1 Grounding Guide</li>
+                <li onClick={() => navigate('/dashboard')}>Mood & Streak Tracker</li>
+              </ul>
             </div>
-            
-            <div className="testimonial-card">
-              <div className="avatar">M</div>
-              <div className="user-info">
-                <h4>Michael R.</h4>
-                <p>Software Engineer</p>
-              </div>
-              <p className="testimonial-text">"The CBT techniques helped me reframe negative thoughts. I feel more confident and in control of my emotions now."</p>
-              <div className="rating">
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-              </div>
-            </div>
-            
-            <div className="testimonial-card">
-              <div className="avatar">E</div>
-              <div className="user-info">
-                <h4>Emma L.</h4>
-                <p>Student</p>
-              </div>
-              <p className="testimonial-text">"Having 24/7 access to therapy has been incredible. The mindfulness practices have transformed my daily routine."</p>
-              <div className="rating">
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-                <Star className="star" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Statistics Section */}
-      <section className="stats-section">
-        <div className="container">
-          <div className="stats-container">
-            <div className="stat">
-              <div className="stat-number">10K+</div>
-              <div className="stat-label">Active Users</div>
+            {/* Column 3: Navigation */}
+            <div>
+              <div className="footer-col-title">Navigation</div>
+              <ul className="footer-col-links">
+                <li onClick={handleStartTalking}>Begin Session</li>
+                <li onClick={() => navigate('/dashboard')}>Wellness Dashboard</li>
+                <li onClick={() => navigate('/history')}>Session History</li>
+                <li onClick={() => navigate('/signin')}>Sign In to Account</li>
+                <li onClick={() => navigate('/signup')}>Create New Account</li>
+              </ul>
             </div>
-            <div className="stat">
-              <div className="stat-number">95%</div>
-              <div className="stat-label">Satisfaction Rate</div>
-            </div>
-            <div className="stat">
-              <div className="stat-number">24/7</div>
-              <div className="stat-label">Availability</div>
-            </div>
-            <div className="stat">
-              <div className="stat-number">100K+</div>
-              <div className="stat-label">Sessions Completed</div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Why MindfulAI Section */}
-      <section className="why-section">
-        <div className="container">
-          <h2 className="section-title">Why MindfulAI?</h2>
-          <p className="section-subtitle">Combining cutting-edge AI with evidence-based therapeutic approaches for personalized mental health support</p>
-          
-          <div className="why-content">
-            <div className="features-column">
-              <div className="feature">
-                <div className="feature-icon">
-                  <Heart className="icon" />
+            {/* Column 4: Emergency Hotlines */}
+            <div>
+              <div className="footer-col-title">Crisis & Safety Hotlines</div>
+              <div className="footer-crisis-box">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8, fontWeight: 600, color: '#fca5a5' }}>
+                  <PhoneCall style={{ width: 16, height: 16 }} />
+                  Immediate Support (24/7)
                 </div>
-                <h3>Judgment-Free Space</h3>
-                <p>Express yourself freely in a completely safe and confidential environment where you can be your authentic self.</p>
-              </div>
-              
-              <div className="feature">
-                <div className="feature-icon">
-                  <Brain className="icon" />
-                </div>
-                <h3>Evidence-Based Approaches</h3>
-                <p>Our AI is trained on proven therapeutic methods including CBT, mindfulness, and motivational interviewing techniques.</p>
-              </div>
-              
-              <div className="feature">
-                <div className="feature-icon">
-                  <Lightbulb className="icon" />
-                </div>
-                <h3>Personalized Experience</h3>
-                <p>Every conversation is tailored to your unique needs, learning from your preferences and adapting to your communication style.</p>
-              </div>
-            </div>
-            
-            <div className="cta-column">
-              <div className="cta-card">
-                <h3>Start Your Free Session</h3>
-                <ul className="benefits-list">
-                  <li>No credit card required</li>
-                  <li>Complete privacy protection</li>
-                  <li>Unlimited conversation time</li>
-                  <li>All therapy styles included</li>
-                </ul>
-                <button className="cta-button secondary" onClick={handleStartTalking}>
-                  Begin Your Journey
-                  <ArrowRight className="button-icon" />
-                </button>
+                <strong>988 Suicide & Crisis Lifeline:</strong> Call/Text 988 (US/CA)
+                <div style={{ marginTop: 6 }}><strong>Crisis Text Line:</strong> Text HOME to 741741</div>
+                <div style={{ marginTop: 6 }}><strong>AASRA Helpline (India):</strong> +91-9820466726</div>
+                <div style={{ marginTop: 6 }}><strong>Global Directory:</strong> findahelpline.com</div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Healing Through Technology Section */}
-      <section className="technology-section">
-        <div className="container">
-          <h2 className="section-title">Healing Through Technology</h2>
-          <p className="section-subtitle">Advanced AI therapy techniques designed to support your mental wellness journey</p>
-          
-          <div className="tech-cards">
-            <div className="tech-card">
-              <div className="tech-icon">🧠</div>
-              <h3>Calm Conversations</h3>
-              <p>Gentle, empathetic dialogue designed to help you process emotions and find inner peace through compassionate communication.</p>
+          {/* Footer Bottom Bar */}
+          <div className="footer-bottom-bar">
+            <div>© {new Date().getFullYear()} MindfulAI. Built for personal reflection and emotional self-care.</div>
+            <div className="footer-bottom-links">
+              <span onClick={() => scrollToSection('safety')}>Safety Ethics</span>
+              <span>•</span>
+              <span onClick={() => navigate('/')}>Privacy Policy</span>
+              <span>•</span>
+              <span onClick={() => navigate('/')}>Terms of Service</span>
             </div>
-            
-            <div className="tech-card">
-              <div className="tech-icon">📝</div>
-              <h3>Progress Tracking</h3>
-              <p>Monitor your emotional journey with detailed insights, mood patterns, and personalized recommendations for continued growth.</p>
-            </div>
-            
-            <div className="tech-card">
-              <div className="tech-icon">💗</div>
-              <h3>Mindful Support</h3>
-              <p>24/7 availability with instant responses, ensuring you always have a supportive presence during challenging moments.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-brand">
-              <h3>MindfulAI</h3>
-              <p>Compassionate AI therapy for a healthier mind</p>
-            </div>
-            
-            <div className="footer-links">
-              <button onClick={handleStartTalking}>Start Session</button>
-              <button onClick={() => navigate('/history')}>View History</button>
-            </div>
-            
-            <div className="social-links">
-              <div className="social-icon">📷</div>
-              <div className="social-icon">🐦</div>
-              <div className="social-icon">💼</div>
-            </div>
-          </div>
-          
-          <div className="footer-bottom">
-            <p>Designed for mental wellness and Always having someone to talk to.....</p>
           </div>
         </div>
       </footer>
