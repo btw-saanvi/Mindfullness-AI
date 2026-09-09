@@ -427,6 +427,66 @@ def get_history(user_id: str):
         })
     return {"sessions": summaries}
 
+@app.get("/daily-affirmation/{user_id}")
+def get_daily_affirmation(user_id: str):
+    """
+    Generates a personalized, context-aware daily affirmation based on the user's
+    recent mood trends, session needs, and saved stressor preferences.
+    """
+    moods = user_mood_logs.get(user_id, [])
+    prefs = user_preferences_store.get(user_id, {})
+    
+    last_mood = moods[-1]["score"] if moods else None
+    last_need = moods[-1].get("need") if moods else None
+    stressor = prefs.get("biggest_stressor")
+    goal = prefs.get("primary_goal")
+
+    # Construct context description
+    context_hints = []
+    if last_mood is not None:
+        if last_mood <= 4:
+            context_hints.append("The user has been feeling somewhat heavy, overwhelmed, or tired.")
+        elif last_mood >= 7:
+            context_hints.append("The user is feeling grounded, peaceful, or positive.")
+        else:
+            context_hints.append("The user is feeling balanced and seeking mindful consistency.")
+    
+    if last_need:
+        context_hints.append(f"Their recent focus was on {last_need}.")
+    if stressor:
+        context_hints.append(f"Their main source of tension is {stressor}.")
+    if goal:
+        context_hints.append(f"Their aspiration is {goal}.")
+
+    context_str = " ".join(context_hints) if context_hints else "The user is taking a gentle moment for daily self-care."
+
+    prompt = (
+        f"You are a mindful reflection companion. Generate a single, grounded daily affirmation (1-2 sentences, max 25 words).\n"
+        f"Context: {context_str}\n"
+        f"Tone: Compassionate, calming, realistic, and non-toxic. Avoid hollow clichés like 'You can do anything!'\n"
+        f"Affirmation:"
+    )
+
+    fallback_affirmations = [
+        "You do not have to carry everything all at once. Taking this moment to breathe is more than enough.",
+        "Your worth is not defined by productivity. You are allowed to move gently through today.",
+        "Notice what is present right now, without judgment. Give yourself space to simply be.",
+        "Small steps taken with awareness build enduring peace. Trust the pace of your journey."
+    ]
+    import random
+    selected_fallback = random.choice(fallback_affirmations)
+
+    affirmation_text = call_ai(prompt, fallback=selected_fallback)
+    # Strip any accidental wrapping quotes
+    affirmation_text = affirmation_text.strip().strip('"').strip("'")
+
+    return {
+        "user_id": user_id,
+        "affirmation": affirmation_text,
+        "context_applied": bool(context_hints),
+        "generated_at": datetime.utcnow().isoformat()
+    }
+
 @app.get("/health")
 def health():
     return {"status": "ok", "version": "2.0.0"}
