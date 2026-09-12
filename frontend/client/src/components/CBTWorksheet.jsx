@@ -27,7 +27,7 @@ const CBTWorksheet = ({ isOpen, onClose }) => {
       });
       setAnalysis(res.data.analysis);
       setStep(4);
-    } catch (_e) {
+    } catch {
       setAnalysis("Great effort challenging that thought! Reframing takes practice, and established evidence helps build cognitive resilience.");
       setStep(4);
     } finally {

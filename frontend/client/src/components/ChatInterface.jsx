@@ -82,7 +82,7 @@ const ChatInterface = ({ userPreferences }) => {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages((prev) => [...prev, aiMsg]);
-    } catch (_e) {
+    } catch {
       console.warn('Session start error fallback');
     } finally {
       setIsLoading(false);
@@ -98,7 +98,7 @@ const ChatInterface = ({ userPreferences }) => {
         session_id: sessionId || 'current'
       });
       setSummaryModal(res.data.summary);
-    } catch (_e) {
+    } catch {
       setSummaryModal("Session summary: Focused on thoughtful reflection and processing emotions. Takeaway: Practice gentle self-compassion today.");
     } finally {
       setIsLoading(false);

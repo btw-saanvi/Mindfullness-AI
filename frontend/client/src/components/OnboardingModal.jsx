@@ -34,7 +34,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
 
       try {
         await axios.post(`${apiUrl}/onboarding`, preferences);
-      } catch (_e) {
+      } catch {
         console.warn('Backend onboarding sync offline, saved locally');
       }
 
