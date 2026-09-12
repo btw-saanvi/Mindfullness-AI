@@ -49,7 +49,7 @@ const SignIn = () => {
         navigate('/chat');
         return;
       }
-    } catch (e) {
+    } catch (_e) {
       console.warn('Backend token verification unavailable, using local parsing.');
     }
 

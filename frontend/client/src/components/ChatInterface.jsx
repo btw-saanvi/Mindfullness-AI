@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Heart, Lightbulb, Brain, Leaf, History, ShieldAlert, CheckCircle2, Target, Wind } from 'lucide-react';
 import axios from 'axios';
@@ -18,7 +18,7 @@ const ChatInterface = ({ userPreferences }) => {
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [selectedStyle, setSelectedStyle] = useState('calm');
-  const [genZEnabled, setGenZEnabled] = useState(!!userPreferences?.genz);
+
   const [vibe, setVibe] = useState('chill');
   
   const [crisisAlert, setCrisisAlert] = useState(null);
@@ -82,7 +82,7 @@ const ChatInterface = ({ userPreferences }) => {
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
       setMessages((prev) => [...prev, aiMsg]);
-    } catch (e) {
+    } catch (_e) {
       console.warn('Session start error fallback');
     } finally {
       setIsLoading(false);
@@ -98,7 +98,7 @@ const ChatInterface = ({ userPreferences }) => {
         session_id: sessionId || 'current'
       });
       setSummaryModal(res.data.summary);
-    } catch (e) {
+    } catch (_e) {
       setSummaryModal("Session summary: Focused on thoughtful reflection and processing emotions. Takeaway: Practice gentle self-compassion today.");
     } finally {
       setIsLoading(false);
@@ -125,7 +125,6 @@ const ChatInterface = ({ userPreferences }) => {
         message: text,
         gender: userPreferences?.gender || 'female',
         persona: selectedStyle,
-        genz: genZEnabled,
         vibe: vibe,
         journaling: userPreferences?.journaling || false
       }, {

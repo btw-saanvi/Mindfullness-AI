@@ -189,6 +189,7 @@ def build_companion_prompt(
         f"Tone style: {gender_tone}.\n"
         f"Persona focus: {persona_instructions}\n"
         f"Vibe style: {vibe_instructions}\n"
+        f"Behavioral instructions: Respond positively and kindly. Be honest and authentic. Gently incorporate relevant psychological concepts or terms where helpful to foster self-awareness.\n"
         f"Safety rules: Never diagnose illness or prescribe clinical treatments. Speak conversationally in 2-4 sentences.{pref_text}{history_text}\n\n"
         f"User says: {message}{journal_note}\n\n"
         f"MindfulAI:"

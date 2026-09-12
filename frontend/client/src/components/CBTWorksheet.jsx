@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-const CBTWorksheet = ({ isOpen, onClose, onComplete }) => {
+const CBTWorksheet = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(1);
   const [automaticThought, setAutomaticThought] = useState('');
   const [evidenceAgainst, setEvidenceAgainst] = useState('');
@@ -27,7 +27,7 @@ const CBTWorksheet = ({ isOpen, onClose, onComplete }) => {
       });
       setAnalysis(res.data.analysis);
       setStep(4);
-    } catch (e) {
+    } catch (_e) {
       setAnalysis("Great effort challenging that thought! Reframing takes practice, and established evidence helps build cognitive resilience.");
       setStep(4);
     } finally {
