@@ -51,7 +51,7 @@ const SessionHistory = () => {
     <div className="history-page">
       <div className="history-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <button className="back-button" onClick={() => navigate('/')} title="Home"> 
+          <button className="back-button light" onClick={() => navigate('/')} title="Home"> 
             <ArrowLeft style={{ width: 18, height: 18 }} />
           </button>
           <Logo size="small" onClick={() => navigate('/')} />
@@ -78,19 +78,19 @@ const SessionHistory = () => {
 
       <div className="history-list">
         {loading ? (
-          <div style={{ color: '#94a3b8', textAlign: 'center', padding: 40 }}>Loading history...</div>
+          <div style={{ color: 'var(--muted)', textAlign: 'center', padding: 40 }}>Loading history...</div>
         ) : filtered.length === 0 ? (
-          <div style={{ color: '#94a3b8', textAlign: 'center', padding: 40 }}>
+          <div style={{ color: 'var(--muted)', textAlign: 'center', padding: 40 }}>
             No past sessions found. Start a new session to begin reflecting.
           </div>
         ) : (
           filtered.map((s) => (
             <div key={s.id} className="history-item">
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 8 }}>
-                <span className="badge-style" style={{ color: '#7dd3fc', border: '1px solid rgba(125,211,252,0.3)', background: 'rgba(125,211,252,0.1)' }}>
+                <span className="badge-style" style={{ color: 'var(--accent)', border: '1px solid rgba(26,122,98,0.3)', background: 'var(--accent-soft)' }}>
                   {(s.style || 'Calm').charAt(0).toUpperCase() + (s.style || 'Calm').slice(1)} Mode
                 </span>
-                <span style={{ color: '#64748b', fontSize: '0.85rem' }}>{s.messages_count || 0} messages</span>
+                <span style={{ color: 'var(--faint)', fontSize: '0.85rem' }}>{s.messages_count || 0} messages</span>
               </div>
               <div className="history-item-meta">
                 <span>{s.started_at ? new Date(s.started_at).toLocaleDateString() : 'Recent'}</span>

@@ -60,10 +60,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
 
         {step === 1 && (
           <div>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.4rem', color: '#f8fafc', marginBottom: 6 }}>
+            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: '1.4rem', color: 'var(--ink)', marginBottom: 6 }}>
               Welcome to MindfulAI
             </h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.92rem', marginBottom: 20 }}>
+            <p style={{ color: 'var(--muted)', fontSize: '0.92rem', marginBottom: 20 }}>
               Let's tailor your reflection experience. What brings you here today?
             </p>
 
@@ -83,9 +83,9 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                     style={{
                       padding: 14,
                       borderRadius: 12,
-                      border: isSel ? '1px solid #7dd3fc' : '1px solid rgba(255,255,255,0.08)',
-                      background: isSel ? 'rgba(125,211,252,0.15)' : 'rgba(255,255,255,0.03)',
-                      color: '#f8fafc',
+                      border: isSel ? '1px solid var(--accent)' : '1px solid var(--line)',
+                      background: isSel ? 'var(--accent-soft)' : 'var(--bg)',
+                      color: 'var(--ink)',
                       display: 'flex',
                       alignItems: 'center',
                       gap: 12,
@@ -94,7 +94,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                       fontSize: '0.92rem'
                     }}
                   >
-                    <Icon style={{ width: 18, height: 18, color: isSel ? '#7dd3fc' : '#94a3b8' }} />
+                    <Icon style={{ width: 18, height: 18, color: isSel ? 'var(--accent)' : 'var(--muted)' }} />
                     {item.label}
                   </button>
                 );
@@ -105,8 +105,8 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
 
         {step === 2 && (
           <div>
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.4rem', color: '#f8fafc', marginBottom: 6 }}>Companion Tone Vibe</h2>
-            <p style={{ color: '#94a3b8', fontSize: '0.92rem', marginBottom: 20 }}>
+            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: '1.4rem', color: 'var(--ink)', marginBottom: 6 }}>Companion Tone Vibe</h2>
+            <p style={{ color: 'var(--muted)', fontSize: '0.92rem', marginBottom: 20 }}>
               How would you like MindfulAI to respond during your reflection sessions?
             </p>
 
@@ -124,21 +124,21 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                     style={{
                       padding: 14,
                       borderRadius: 12,
-                      border: isSel ? '1px solid #7dd3fc' : '1px solid rgba(255,255,255,0.08)',
-                      background: isSel ? 'rgba(125,211,252,0.15)' : 'rgba(255,255,255,0.03)',
-                      color: '#f8fafc',
+                      border: isSel ? '1px solid var(--accent)' : '1px solid var(--line)',
+                      background: isSel ? 'var(--accent-soft)' : 'var(--bg)',
+                      color: 'var(--ink)',
                       textAlign: 'left',
                       cursor: 'pointer'
                     }}
                   >
-                    <div style={{ fontWeight: 600, fontSize: '0.95rem', color: isSel ? '#7dd3fc' : '#f8fafc' }}>{item.name}</div>
-                    <div style={{ color: '#94a3b8', fontSize: '0.85rem', marginTop: 2 }}>{item.desc}</div>
+                    <div style={{ fontWeight: 600, fontSize: '0.95rem', color: isSel ? 'var(--accent)' : 'var(--ink)' }}>{item.name}</div>
+                    <div style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: 2 }}>{item.desc}</div>
                   </button>
                 );
               })}
             </div>
 
-            <label style={{ color: '#cbd5e1', fontSize: '0.88rem', display: 'block', marginBottom: 6 }}>
+            <label style={{ color: 'var(--ink-soft)', fontSize: '0.88rem', display: 'block', marginBottom: 6 }}>
               Current main stressor (optional):
             </label>
             <input
@@ -150,9 +150,9 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
                 width: '100%',
                 padding: 12,
                 borderRadius: 10,
-                border: '1px solid rgba(255,255,255,0.08)',
-                background: 'rgba(255,255,255,0.04)',
-                color: '#f8fafc'
+                border: '1px solid var(--line)',
+                background: 'var(--bg)',
+                color: 'var(--ink)'
               }}
             />
           </div>
@@ -160,22 +160,22 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
 
         {step === 3 && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, color: '#7dd3fc' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12, color: 'var(--accent)' }}>
               <ShieldCheck style={{ width: 24, height: 24 }} />
-              <h2 style={{ fontFamily: 'Outfit', fontSize: '1.4rem', margin: 0, color: '#f8fafc' }}>Safety & Boundaries</h2>
+              <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: '1.4rem', margin: 0, color: 'var(--ink)' }}>Safety & Boundaries</h2>
             </div>
 
             <div style={{
-              background: 'rgba(147,197,253,0.1)',
-              border: '1px solid rgba(147,197,253,0.25)',
+              background: 'var(--accent-soft)',
+              border: '1px solid rgba(26,122,98,0.25)',
               borderRadius: 12,
               padding: 16,
-              color: '#cbd5e1',
+              color: 'var(--ink-soft)',
               fontSize: '0.9rem',
               lineHeight: 1.6,
               marginBottom: 20
             }}>
-              <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: '#93c5fd' }}>Important Boundary Notice:</p>
+              <p style={{ margin: '0 0 8px 0', fontWeight: 600, color: 'var(--accent)' }}>Important Boundary Notice:</p>
               <p style={{ margin: '0 0 8px 0' }}>
                 MindfulAI is an AI reflection companion designed for daily emotional check-ins, CBT reframing exercises, and stress relief.
               </p>
@@ -184,12 +184,12 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }) => {
               </p>
             </div>
 
-            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', color: '#f8fafc', fontSize: '0.9rem' }}>
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: 10, cursor: 'pointer', color: 'var(--ink)', fontSize: '0.9rem' }}>
               <input
                 type="checkbox"
                 checked={acknowledged}
                 onChange={(e) => setAcknowledged(e.target.checked)}
-                style={{ accentColor: '#7dd3fc', marginTop: 3 }}
+                style={{ accentColor: 'var(--accent)', marginTop: 3 }}
               />
               <span>I understand that MindfulAI is a reflection companion and not a licensed therapy service.</span>
             </label>

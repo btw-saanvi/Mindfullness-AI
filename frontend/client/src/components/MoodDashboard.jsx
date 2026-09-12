@@ -16,11 +16,9 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
     setIsAffirmationLoading(true);
     try {
       const res = await axios.get(`${apiUrl}/daily-affirmation/${userId}`);
-      if (res.data && res.data.affirmation) {
-        setAffirmation(res.data.affirmation);
-      }
+      if (res.data?.affirmation) setAffirmation(res.data.affirmation);
     } catch {
-      setAffirmation("You do not have to carry everything all at once. Taking this moment to breathe is more than enough.");
+      setAffirmation('You do not have to carry everything all at once. Taking this moment to breathe is more than enough.');
     } finally {
       setIsAffirmationLoading(false);
     }
@@ -36,14 +34,14 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
         setData({
           streak_days: 4,
           total_sessions: 8,
-          pattern_insight: "Pattern Insight: Your check-ins show steady self-care consistency. Keep nourishing moments of quiet presence.",
+          pattern_insight: 'Pattern Insight: Your check-ins show steady self-care consistency. Keep nourishing moments of quiet presence.',
           mood_logs: [
             { score: 4, score_label: 'Heavy' },
             { score: 5, score_label: 'Okay' },
             { score: 7, score_label: 'Calm' },
             { score: 6, score_label: 'Calm' },
-            { score: 8, score_label: 'Bright' }
-          ]
+            { score: 8, score_label: 'Bright' },
+          ],
         });
       }
     };
@@ -53,13 +51,16 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
 
   return (
     <div className="dashboard-page">
-      {/* Header */}
       <div className="dashboard-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-          <button className="back-button" onClick={() => navigate('/')} title="Home">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <button className="back-button light" onClick={() => navigate('/')} title="Home">
             <ArrowLeft style={{ width: 18, height: 18 }} />
           </button>
+          <span className="product-dot" style={{ background: 'rgba(12, 13, 16, 0.18)' }} />
+          <span className="product-dot" style={{ background: 'rgba(12, 13, 16, 0.18)' }} />
+          <span className="product-dot" style={{ background: 'rgba(12, 13, 16, 0.18)' }} />
           <Logo size="small" onClick={() => navigate('/')} />
+          <span style={{ marginLeft: 8, color: 'var(--muted)', fontSize: '0.8rem', fontWeight: 500 }}>MindfulAI / Dashboard</span>
         </div>
 
         <button className="btn-pastel-blue" onClick={() => navigate('/chat')}>
@@ -68,10 +69,9 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
         </button>
       </div>
 
-      {/* Stats Summary Row */}
       <div className="dash-stats-row">
         <div className="dash-stat-card">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#7dd3fc', marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--accent)', marginBottom: 8 }}>
             <Calendar style={{ width: 20, height: 20 }} />
             <span style={{ fontSize: '0.88rem', fontWeight: 500 }}>Self-Care Streak</span>
           </div>
@@ -80,7 +80,7 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
         </div>
 
         <div className="dash-stat-card">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#93c5fd', marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--accent)', marginBottom: 8 }}>
             <Heart style={{ width: 20, height: 20 }} />
             <span style={{ fontSize: '0.88rem', fontWeight: 500 }}>Completed Sessions</span>
           </div>
@@ -89,7 +89,7 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
         </div>
 
         <div className="dash-stat-card">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#bfdbfe', marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--accent)', marginBottom: 8 }}>
             <TrendingUp style={{ width: 20, height: 20 }} />
             <span style={{ fontSize: '0.88rem', fontWeight: 500 }}>Emotional Trend</span>
           </div>
@@ -98,123 +98,109 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
         </div>
       </div>
 
-      {/* Daily Mindful Affirmation Card */}
-      <div style={{ padding: '0 40px 16px' }}>
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(125, 211, 252, 0.12) 0%, rgba(96, 165, 250, 0.06) 100%)',
-          border: '1px solid rgba(125, 211, 252, 0.28)',
-          borderRadius: 16,
-          padding: '20px 24px',
-          display: 'flex',
-          alignItems: 'flex-start',
-          justifyContent: 'space-between',
-          gap: 16,
-          boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)'
-        }}>
+      <div style={{ padding: '22px 36px 0' }}>
+        <div
+          style={{
+            background: 'var(--bg-elevated)',
+            border: '1px solid var(--line)',
+            borderRadius: 16,
+            padding: '20px 24px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'space-between',
+            gap: 16,
+            boxShadow: 'var(--shadow-sm)',
+          }}
+        >
           <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14 }}>
-            <div style={{
-              padding: 10,
-              background: 'linear-gradient(135deg, rgba(125, 211, 252, 0.3) 0%, rgba(56, 189, 248, 0.2) 100%)',
-              borderRadius: 12,
-              color: '#7dd3fc',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexShrink: 0
-            }}>
+            <div
+              style={{
+                padding: 10,
+                background: 'var(--accent-soft)',
+                borderRadius: 12,
+                color: 'var(--accent)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
               <Sparkles style={{ width: 22, height: 22 }} />
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                <span style={{ fontWeight: 600, color: '#f8fafc', fontSize: '0.96rem' }}>
+                <span style={{ fontWeight: 650, color: 'var(--ink)', fontSize: '0.96rem' }}>
                   Daily Mindful Affirmation
                 </span>
-                <span style={{ fontSize: '0.72rem', background: 'rgba(125, 211, 252, 0.18)', color: '#7dd3fc', padding: '2px 8px', borderRadius: 12, fontWeight: 500 }}>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    background: 'var(--accent-soft)',
+                    color: 'var(--accent)',
+                    padding: '2px 8px',
+                    borderRadius: 12,
+                    fontWeight: 600,
+                  }}
+                >
                   Mood-Aware
                 </span>
               </div>
-              <p style={{
-                color: '#e2e8f0',
-                fontSize: '1rem',
-                lineHeight: 1.6,
-                margin: 0,
-                fontStyle: 'italic',
-                fontWeight: 400
-              }}>
+              <p style={{ color: 'var(--ink-soft)', fontSize: '1rem', lineHeight: 1.6, margin: 0, fontStyle: 'italic' }}>
                 {isAffirmationLoading ? 'Attuning a gentle reflection for you...' : `"${affirmation}"`}
               </p>
             </div>
           </div>
 
           <button
-            onClick={() => {
-              const userId = localStorage.getItem('mindful_user_id') || 'guest';
-              fetchAffirmation(userId);
-            }}
+            onClick={() => fetchAffirmation(localStorage.getItem('mindful_user_id') || 'guest')}
             disabled={isAffirmationLoading}
-            style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.12)',
-              borderRadius: 8,
-              padding: 8,
-              color: '#94a3b8',
-              cursor: isAffirmationLoading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.2s',
-              flexShrink: 0
-            }}
+            className="btn-outline-warm"
+            style={{ padding: 8 }}
             title="Generate a fresh affirmation"
           >
-            <RefreshCw style={{ width: 16, height: 16, animation: isAffirmationLoading ? 'spin 1s linear infinite' : 'none' }} />
+            <RefreshCw style={{ width: 16, height: 16 }} />
           </button>
         </div>
       </div>
 
-      {/* Soft Pattern Insight Card */}
       {data?.pattern_insight && (
-        <div className="insight-card" style={{ background: 'rgba(147,197,253,0.1)', border: '1px solid rgba(147,197,253,0.25)' }}>
-          <div style={{ padding: 8, background: 'rgba(125,211,252,0.2)', borderRadius: 10, color: '#7dd3fc' }}>
+        <div className="insight-card">
+          <div style={{ padding: 8, background: 'var(--accent-soft)', borderRadius: 10, color: 'var(--accent)' }}>
             <Wind style={{ width: 20, height: 20 }} />
           </div>
           <div>
-            <div style={{ fontWeight: 600, color: '#f8fafc', marginBottom: 4 }}>Soft Pattern Insight</div>
-            <div style={{ color: '#cbd5e1', fontSize: '0.92rem', lineHeight: 1.6 }}>
-              {data.pattern_insight}
-            </div>
+            <div style={{ fontWeight: 650, color: 'var(--ink)', marginBottom: 4 }}>Soft Pattern Insight</div>
+            <div style={{ color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.6 }}>{data.pattern_insight}</div>
           </div>
         </div>
       )}
 
-      {/* Mood History Chart Area */}
-      <div style={{ padding: '30px 40px 0' }}>
-        <div style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)', borderRadius: 14, padding: 28 }}>
-          <h3 style={{ fontFamily: 'Outfit', color: '#f8fafc', fontSize: '1.2rem', marginBottom: 6 }}>
+      <div style={{ padding: '28px 36px 0' }}>
+        <div style={{ background: 'var(--bg-elevated)', border: '1px solid var(--line)', borderRadius: 14, padding: 28, boxShadow: 'var(--shadow-sm)' }}>
+          <h3 style={{ fontFamily: 'Syne, sans-serif', color: 'var(--ink)', fontSize: '1.2rem', marginBottom: 6 }}>
             Recent Mood Trend
           </h3>
-          <p style={{ color: '#94a3b8', fontSize: '0.88rem', marginBottom: 24 }}>
-            1 to 10 mood score evaluation across recent check-ins
+          <p style={{ color: 'var(--muted)', fontSize: '0.88rem', marginBottom: 24 }}>
+            1 to 10 mood score across recent check-ins
           </p>
 
-          {/* SVG Bar Chart in Pastel Blue */}
-          <div style={{ height: 160, display: 'flex', alignItems: 'flex-end', gap: 20, paddingBottom: 10, borderBottom: '1px dashed rgba(255,255,255,0.08)' }}>
+          <div style={{ height: 160, display: 'flex', alignItems: 'flex-end', gap: 20, paddingBottom: 10, borderBottom: '1px dashed var(--line)' }}>
             {(data?.mood_logs || [4, 5, 7, 6, 8]).map((log, idx) => {
               const score = typeof log === 'number' ? log : log.score || 5;
               const heightPct = (score / 10) * 100;
               return (
                 <div key={idx} style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
-                  <span style={{ fontSize: '0.78rem', color: '#7dd3fc', marginBottom: 6, fontWeight: 600 }}>{score}</span>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--accent)', marginBottom: 6, fontWeight: 650 }}>{score}</span>
                   <div
                     style={{
                       width: '100%',
                       maxWidth: 36,
                       height: `${heightPct}%`,
-                      background: 'linear-gradient(180deg, #7dd3fc 0%, rgba(125,211,252,0.2) 100%)',
-                      borderRadius: '6px 6px 0 0'
+                      background: 'linear-gradient(180deg, var(--accent) 0%, rgba(26,122,98,0.2) 100%)',
+                      borderRadius: '6px 6px 0 0',
                     }}
                   />
-                  <span style={{ fontSize: '0.75rem', color: '#64748b', marginTop: 8 }}>Day {idx + 1}</span>
+                  <span style={{ fontSize: '0.75rem', color: 'var(--faint)', marginTop: 8 }}>Day {idx + 1}</span>
                 </div>
               );
             })}
@@ -222,9 +208,8 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
         </div>
       </div>
 
-      {/* Quick Tools Section */}
-      <div style={{ padding: '30px 40px 0' }}>
-        <h3 style={{ fontFamily: 'Outfit', color: '#f8fafc', fontSize: '1.2rem', marginBottom: 16 }}>
+      <div style={{ padding: '28px 36px 0' }}>
+        <h3 style={{ fontFamily: 'Syne, sans-serif', color: 'var(--ink)', fontSize: '1.2rem', marginBottom: 16 }}>
           Standalone Therapeutic Exercises
         </h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>

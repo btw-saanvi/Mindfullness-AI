@@ -10,7 +10,7 @@ import logging
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 
-from config import CORS_ORIGINS, MAX_MESSAGE_LENGTH, APP_TITLE, APP_VERSION
+from config import CORS_ORIGINS, MAX_MESSAGE_LENGTH, APP_TITLE, APP_VERSION, GOOGLE_CLIENT_ID
 from ai_service import (
     detect_crisis,
     CRISIS_RESPONSE,
@@ -20,6 +20,13 @@ from ai_service import (
     generate_session_summary,
     generate_cbt_feedback,
 )
+
+try:
+    from google.oauth2 import id_token as google_id_token
+    from google.auth.transport import requests as google_requests
+    _google_auth_available = True
+except ImportError:
+    _google_auth_available = False
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -131,10 +138,14 @@ class OnboardingRequest(BaseModel):
         return v.strip()
 
 
+class GoogleAuthRequest(BaseModel):
+    id_token: str
+
+
 # --- API Route Handlers ---
 
 @app.post("/chat")
-def chat(request: ChatRequest):
+async def chat(request: ChatRequest):
     """Primary chat endpoint with crisis detection, prompt building, and conversational logging."""
     # Safety Check: Intercept crisis language immediately
     if detect_crisis(request.message):
@@ -156,7 +167,7 @@ def chat(request: ChatRequest):
         user_preferences=prefs
     )
 
-    reply = call_ai(
+    reply = await call_ai(
         prompt,
         fallback="I'm having a brief connection pause, but I am right here listening."
     )
@@ -236,7 +247,7 @@ def start_session(req: SessionStartRequest):
 
 
 @app.post("/session/end")
-def end_session(req: SessionEndRequest):
+async def end_session(req: SessionEndRequest):
     """Concludes a session and generates an AI recap with actionable takeaway."""
     sessions = user_sessions.get(req.user_id, [])
     session = next((s for s in sessions if s["id"] == req.session_id), None)
@@ -248,16 +259,16 @@ def end_session(req: SessionEndRequest):
         return {"summary": "Completed session.", "takeaway": "Took time for quiet reflection."}
 
     user_msgs = [m["text"] for m in session.get("messages", []) if m["sender"] == "user"]
-    summary_text = generate_session_summary(user_msgs)
+    summary_text = await generate_session_summary(user_msgs)
 
     session["summary"] = summary_text
     return {"summary": summary_text}
 
 
 @app.post("/cbt-reframe")
-def process_cbt(req: CBTReframeRequest):
+async def process_cbt(req: CBTReframeRequest):
     """Evaluates a 3-step CBT thought reframing worksheet and generates warm validation."""
-    analysis = generate_cbt_feedback(
+    analysis = await generate_cbt_feedback(
         automatic_thought=req.automatic_thought,
         evidence_against=req.evidence_against,
         balanced_thought=req.balanced_thought
@@ -266,11 +277,11 @@ def process_cbt(req: CBTReframeRequest):
 
 
 @app.get("/daily-affirmation/{user_id}")
-def get_daily_affirmation_route(user_id: str):
+async def get_daily_affirmation_route(user_id: str):
     """Generates a personalized, context-aware daily affirmation based on user history and stressors."""
     moods = user_mood_logs.get(user_id, [])
     prefs = user_preferences_store.get(user_id, {})
-    affirmation_text = generate_daily_affirmation(moods, prefs)
+    affirmation_text = await generate_daily_affirmation(moods, prefs)
 
     return {
         "user_id": user_id,
@@ -338,3 +349,32 @@ def get_history(user_id: str):
 def health():
     """Health check endpoint confirming API status and version."""
     return {"status": "ok", "version": APP_VERSION}
+
+
+@app.post("/auth/google")
+async def google_auth(req: GoogleAuthRequest):
+    """Verifies a Google OAuth ID token and returns user profile information."""
+    if not _google_auth_available:
+        raise HTTPException(status_code=503, detail="Google auth library not available on server.")
+    if not GOOGLE_CLIENT_ID:
+        raise HTTPException(status_code=503, detail="GOOGLE_CLIENT_ID not configured on server.")
+
+    try:
+        idinfo = google_id_token.verify_oauth2_token(
+            req.id_token,
+            google_requests.Request(),
+            GOOGLE_CLIENT_ID
+        )
+        return {
+            "status": "success",
+            "user": {
+                "id": idinfo.get("sub"),
+                "email": idinfo.get("email"),
+                "name": idinfo.get("name", idinfo.get("given_name", "User")),
+                "picture": idinfo.get("picture"),
+                "email_verified": idinfo.get("email_verified", False),
+            }
+        }
+    except ValueError as e:
+        logger.warning(f"Google token verification failed: {e}")
+        raise HTTPException(status_code=401, detail="Invalid Google ID token.")

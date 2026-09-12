@@ -1,4 +1,16 @@
-# MindfulAI — Mental Wellness & Reflection Companion
+# ✦ MindfulAI 🌿
+
+<div align="center">
+
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen?style=for-the-badge)
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=for-the-badge&logo=FastAPI&logoColor=white)
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=for-the-badge&logo=google&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
+
+**Your personal, judgment-free space to pause, reflect, and regulate.**
+
+</div>
 
 ## 1. Overview
 MindfulAI is an empathetic, AI-powered reflection companion designed to give individuals a gentle, judgment-free space to pause, reflect, and regulate their emotional well-being. Framed explicitly as a **wellness and self-reflection companion** rather than a licensed medical or therapy service, MindfulAI blends evidence-based self-care practices (Cognitive Behavioral Therapy reframing, 4-7-8 rhythm breathing, and 5-4-3-2-1 sensory grounding) with contextual AI dialogue powered by Google Generative AI (Gemini 1.5 Flash).
@@ -40,7 +52,7 @@ MindfulAI is an empathetic, AI-powered reflection companion designed to give ind
 
 ## 4. Screenshots / Demo
 
-![MindfulAI Tone check](./frontend/client/src/assets/image.png)
+![MindfulAI Landing Page](./frontend/client/src/assets/landingbg.jpeg)
 
 ## 5. Tech Stack
 

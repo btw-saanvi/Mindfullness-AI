@@ -8,6 +8,7 @@ import SessionEntryModal from './SessionEntryModal';
 import BreathingExercise from './BreathingExercise';
 import CBTWorksheet from './CBTWorksheet';
 import Logo from './Logo';
+import chatBg from '../assets/chatbg.png';
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -127,7 +128,10 @@ const ChatInterface = ({ userPreferences }) => {
         genz: genZEnabled,
         vibe: vibe,
         journaling: userPreferences?.journaling || false
-      }, { headers: { Authorization: `Bearer ${getToken()}` } });
+      }, {
+        headers: { Authorization: `Bearer ${getToken()}` },
+        timeout: 20000
+      });
 
       if (response.data.is_crisis) {
         setCrisisAlert(response.data.reply);
@@ -205,16 +209,16 @@ const ChatInterface = ({ userPreferences }) => {
       {summaryModal && (
         <div className="breathing-modal-overlay">
           <div className="cbt-modal-card" style={{ maxWidth: 480, textAlign: 'center' }}>
-            <CheckCircle2 style={{ width: 44, height: 44, color: '#7dd3fc', margin: '0 auto 12px auto' }} />
-            <h2 style={{ fontFamily: 'Outfit', color: '#f8fafc', fontSize: '1.3rem', marginBottom: 12 }}>
+            <CheckCircle2 style={{ width: 44, height: 44, color: 'var(--accent)', margin: '0 auto 12px auto' }} />
+            <h2 style={{ fontFamily: 'Syne, sans-serif', color: 'var(--ink)', fontSize: '1.3rem', marginBottom: 12 }}>
               Session Summary & Takeaway
             </h2>
             <div style={{
-              background: 'rgba(147,197,253,0.1)',
-              border: '1px solid rgba(147,197,253,0.25)',
+              background: 'var(--accent-soft)',
+              border: '1px solid rgba(26,122,98,0.25)',
               borderRadius: 12,
               padding: 18,
-              color: '#cbd5e1',
+              color: 'var(--ink-soft)',
               fontSize: '0.92rem',
               lineHeight: 1.65,
               textAlign: 'left',
@@ -231,37 +235,35 @@ const ChatInterface = ({ userPreferences }) => {
 
       {/* Chat Header */}
       <div className="chat-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+        <div className="chat-chrome-left">
           <button className="back-button" onClick={() => navigate('/')} title="Home">
             <ArrowLeft style={{ width: 18, height: 18 }} />
           </button>
-          
-          <Logo size="small" onClick={() => navigate('/')} />
-
-          <div className="companion-orb-container" style={{ marginLeft: 6 }}>
+          <span className="product-dot" />
+          <span className="product-dot" />
+          <span className="product-dot" />
+          <Logo size="small" variant="dark" onClick={() => navigate('/')} />
+          <span className="chat-chrome-label">MindfulAI / Session</span>
+          <div className="companion-orb-container">
             <div className={`listening-orb ${isLoading ? 'active' : ''}`}></div>
-            <span style={{ color: '#94a3b8', fontSize: '0.85rem' }}>
-              {isLoading ? 'Reflecting...' : 'Listening'}
-            </span>
+            <span>{isLoading ? 'Reflecting...' : 'Listening'}</span>
           </div>
         </div>
 
-        {/* Tools Bar Header Chips with Vector Icons */}
         <div className="tools-bar">
           <button className="tool-chip" onClick={() => setShowEntryModal(true)}>
-            <Target style={{ width: 14, height: 14 }} /> Pick Your Need
+            <Target style={{ width: 14, height: 14 }} /> 1.0 Need
           </button>
           <button className="tool-chip" onClick={() => setShowBreathing(true)}>
             <Wind style={{ width: 14, height: 14 }} /> Breathing
           </button>
           <button className="tool-chip" onClick={() => setShowCBT(true)}>
-            <Brain style={{ width: 14, height: 14 }} /> CBT Reframe
+            <Brain style={{ width: 14, height: 14 }} /> CBT
           </button>
           <button className="tool-chip" onClick={handleEndSession}>
-            <CheckCircle2 style={{ width: 14, height: 14 }} /> End Session
+            <CheckCircle2 style={{ width: 14, height: 14 }} /> End
           </button>
-
-          <button className="view-history-button" onClick={() => navigate('/dashboard')} style={{ marginLeft: 6 }}>
+          <button className="view-history-button" onClick={() => navigate('/dashboard')}>
             Dashboard
           </button>
         </div>
@@ -269,7 +271,12 @@ const ChatInterface = ({ userPreferences }) => {
 
       <div className="chat-layout">
         {/* Main Chat Area */}
-        <div className="main-chat">
+        <div className="main-chat" style={{
+          backgroundImage: `linear-gradient(rgba(12, 13, 16, 0.85), rgba(12, 13, 16, 0.85)), url(${chatBg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}>
           <div className="messages-container">
             {crisisAlert && (
               <div className="crisis-banner">
@@ -301,7 +308,7 @@ const ChatInterface = ({ userPreferences }) => {
             {isLoading && (
               <div className="message ai">
                 <div className="message-content">
-                  <p style={{ color: '#94a3b8', fontStyle: 'italic', margin: 0 }}>MindfulAI is thinking thoughtfully...</p>
+                  <p style={{ color: 'rgba(255,255,255,0.45)', fontStyle: 'italic', margin: 0 }}>MindfulAI is thinking thoughtfully...</p>
                 </div>
               </div>
             )}
@@ -333,7 +340,7 @@ const ChatInterface = ({ userPreferences }) => {
         <div className="chat-sidebar">
           {/* Tone Vibe Switcher */}
           <div style={{ marginBottom: 24, background: 'rgba(255,255,255,0.03)', padding: 14, borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)' }}>
-            <label style={{ color: '#cbd5e1', fontSize: '0.88rem', fontWeight: 500, display: 'block', marginBottom: 8 }}>
+            <label style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.88rem', fontWeight: 500, display: 'block', marginBottom: 8 }}>
               Response Tone Vibe:
             </label>
             <div style={{ display: 'flex', gap: 6 }}>
@@ -349,9 +356,9 @@ const ChatInterface = ({ userPreferences }) => {
                     flex: 1,
                     padding: '6px 8px',
                     borderRadius: 8,
-                    border: vibe === item.id ? '1px solid #7dd3fc' : '1px solid transparent',
-                    background: vibe === item.id ? 'rgba(125,211,252,0.15)' : 'transparent',
-                    color: vibe === item.id ? '#7dd3fc' : '#94a3b8',
+                    border: vibe === item.id ? '1px solid rgba(125,211,176,0.5)' : '1px solid transparent',
+                    background: vibe === item.id ? 'rgba(26,122,98,0.2)' : 'transparent',
+                    color: vibe === item.id ? '#7dd3b0' : 'rgba(255,255,255,0.45)',
                     cursor: 'pointer',
                     fontSize: '0.82rem'
                   }}

@@ -1,7 +1,8 @@
 """
 MindfulAI AI Service Module
-Decoupled service handling Google Generative AI integration, prompt engineering,
-safety boundary enforcement, crisis intervention cues, and specialized generation.
+Uses Groq as the primary model provider (from GROQ_API_KEY), with optional
+Google Gemini fallback. Handles prompts, crisis cues, and specialized generation.
+All AI calls are async to avoid blocking the FastAPI event loop.
 """
 
 import logging
@@ -9,23 +10,36 @@ import random
 from typing import Optional, List, Dict, Any
 from fastapi import HTTPException
 import google.generativeai as genai
-from config import GOOGLE_API_KEY, AI_MODEL_NAME
+from config import GOOGLE_API_KEY, GROQ_API_KEY, AI_MODEL_NAME, GROQ_MODEL_NAME
 
 logger = logging.getLogger("mindfulai.ai_service")
 
-# Initialize Generative AI SDK if API key is present
+# Optional Gemini fallback
 if GOOGLE_API_KEY:
     try:
         genai.configure(api_key=GOOGLE_API_KEY)
-        logger.info("Google Generative AI configured successfully.")
+        logger.info("Google Generative AI configured as fallback.")
     except Exception as e:
         logger.error(f"Failed to configure Google Generative AI: {e}")
-else:
-    logger.warning("GOOGLE_API_KEY is not configured. Service will operate in offline/fallback mode.")
 
-# --- Crisis Detection Cues & Safety Directives ---
+# Groq (OpenAI-compatible) async client
+_groq_client = None
+if GROQ_API_KEY:
+    try:
+        from openai import AsyncOpenAI
+        _groq_client = AsyncOpenAI(
+            api_key=GROQ_API_KEY,
+            base_url="https://api.groq.com/openai/v1",
+            timeout=15.0,
+        )
+        logger.info("Groq AI configured as primary provider (async).")
+    except Exception as e:
+        logger.error(f"Failed to configure Groq client: {e}")
+else:
+    logger.warning("GROQ_API_KEY is not configured.")
+
 CRISIS_KEYWORDS = [
-    "suicide", "kill myself", "end my life", "want to die", 
+    "suicide", "kill myself", "end my life", "want to die",
     "self harm", "cutting myself", "overdose", "no reason to live", "end it all"
 ]
 
@@ -43,6 +57,7 @@ CRISIS_RESPONSE = {
     )
 }
 
+
 def detect_crisis(message: str) -> bool:
     """Evaluates message against crisis intervention triggers."""
     if not message:
@@ -51,72 +66,85 @@ def detect_crisis(message: str) -> bool:
     return any(keyword in msg_lower for keyword in CRISIS_KEYWORDS)
 
 
-# --- Core AI Request Wrapper ---
-def call_ai(prompt: str, fallback: str) -> str:
-    """
-    Executes a prompt against Google Generative AI with resilient error handling.
-    Differentiates between rate limits, permission faults, and network timeouts.
-    Never leaks API keys or internal stack traces to the caller.
-    """
-    if not GOOGLE_API_KEY:
-        logger.warning("GOOGLE_API_KEY not configured — returning fallback response.")
-        return fallback
-
+async def _call_groq(prompt: str) -> Optional[str]:
+    if not _groq_client:
+        return None
     try:
-        model = genai.GenerativeModel(AI_MODEL_NAME)
-        response = model.generate_content(prompt)
-
-        if response is None:
-            logger.warning("AI model returned None response.")
-            return fallback
-
-        if not getattr(response, "text", None):
-            if hasattr(response, "prompt_feedback") and response.prompt_feedback:
-                logger.warning(f"AI response blocked by safety filters: {response.prompt_feedback}")
-            else:
-                logger.warning("AI returned empty text response.")
-            return fallback
-
-        return response.text.strip()
-
+        completion = await _groq_client.chat.completions.create(
+            model=GROQ_MODEL_NAME,
+            messages=[
+                {
+                    "role": "system",
+                    "content": (
+                        "You are MindfulAI, an empathetic mental wellness reflection companion. "
+                        "You are not a therapist. Be warm, concise, and grounded."
+                    ),
+                },
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.7,
+            max_tokens=600,
+        )
+        text = completion.choices[0].message.content if completion.choices else None
+        return text.strip() if text else None
     except Exception as e:
-        error_type = type(e).__name__
-
-        # 429: Rate Limit / Quota Exceeded
-        if "ResourceExhausted" in error_type or "429" in str(e):
-            logger.error(f"AI API rate limit exceeded: {error_type}")
+        error_str = str(e)
+        logger.error(f"Groq API error: {type(e).__name__}: {e}")
+        if "429" in error_str or "rate" in error_str.lower():
             raise HTTPException(
                 status_code=429,
                 detail="The AI service is temporarily busy due to high demand. Please wait a moment and try again."
             )
-
-        # 403: Permission / Authentication
-        if "PermissionDenied" in error_type or "403" in str(e):
-            logger.error(f"AI API permission denied: {error_type}")
+        if "401" in error_str or "403" in error_str or "authentication" in error_str.lower():
             raise HTTPException(
                 status_code=503,
                 detail="AI service configuration issue. Please verify backend credentials."
             )
+        return None
 
-        # 400: Invalid Request
-        if "InvalidArgument" in error_type or "400" in str(e):
-            logger.error(f"AI API invalid argument: {error_type}")
-            return fallback
 
-        # 503: Network / Timeout
-        if any(term in error_type for term in ["Timeout", "ConnectionError", "NetworkError"]):
-            logger.error(f"AI API network error: {error_type}")
-            raise HTTPException(
-                status_code=503,
-                detail="Unable to connect to the AI service. Please check your internet connection."
-            )
+async def _call_gemini(prompt: str) -> Optional[str]:
+    if not GOOGLE_API_KEY:
+        return None
+    try:
+        model = genai.GenerativeModel(AI_MODEL_NAME)
+        response = await model.generate_content_async(prompt)
+        if response is None or not getattr(response, "text", None):
+            return None
+        return response.text.strip()
+    except Exception as e:
+        logger.error(f"Gemini fallback error: {type(e).__name__}: {e}")
+        return None
 
-        # Generic Fallback
-        logger.error(f"Unexpected AI error ({error_type}): {e}")
+
+async def call_ai(prompt: str, fallback: str) -> str:
+    """
+    Primary: Groq. Fallback: Gemini. Final: static fallback string.
+    Never leaks API keys or internal stack traces to the caller.
+    """
+    if not GROQ_API_KEY and not GOOGLE_API_KEY:
+        logger.warning("No AI API keys configured — returning fallback response.")
         return fallback
 
+    # Prefer Groq
+    if GROQ_API_KEY:
+        try:
+            text = await _call_groq(prompt)
+            if text:
+                return text
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected Groq failure: {e}")
 
-# --- Persona & Prompt Builders ---
+    # Gemini fallback
+    text = await _call_gemini(prompt)
+    if text:
+        return text
+
+    return fallback
+
+
 def build_companion_prompt(
     user_id: str,
     message: str,
@@ -167,8 +195,7 @@ def build_companion_prompt(
     )
 
 
-# --- Specialized Generation Functions ---
-def generate_daily_affirmation(moods: List[Dict[str, Any]], prefs: Dict[str, Any]) -> str:
+async def generate_daily_affirmation(moods: List[Dict[str, Any]], prefs: Dict[str, Any]) -> str:
     """Generates a contextual daily affirmation based on mood history and stressors."""
     last_mood = moods[-1]["score"] if moods else None
     last_need = moods[-1].get("need") if moods else None
@@ -206,11 +233,11 @@ def generate_daily_affirmation(moods: List[Dict[str, Any]], prefs: Dict[str, Any
         "Notice what is present right now, without judgment. Give yourself space to simply be.",
         "Small steps taken with awareness build enduring peace. Trust the pace of your journey."
     ]
-    res = call_ai(prompt, fallback=random.choice(fallbacks))
+    res = await call_ai(prompt, fallback=random.choice(fallbacks))
     return res.strip().strip('"').strip("'")
 
 
-def generate_session_summary(user_msgs: List[str]) -> str:
+async def generate_session_summary(user_msgs: List[str]) -> str:
     """Summarizes user session messages into key reflection and actionable takeaway."""
     default_summary = "Session focused on emotional reflection and mindful awareness. Takeaway: Practice gentle self-compassion today."
     if not user_msgs:
@@ -223,10 +250,10 @@ def generate_session_summary(user_msgs: List[str]) -> str:
         f"2. One actionable, compassionate takeaway for the user.\n"
         f"User messages: {context_text}"
     )
-    return call_ai(prompt, fallback=default_summary)
+    return await call_ai(prompt, fallback=default_summary)
 
 
-def generate_cbt_feedback(automatic_thought: str, evidence_against: str, balanced_thought: str) -> str:
+async def generate_cbt_feedback(automatic_thought: str, evidence_against: str, balanced_thought: str) -> str:
     """Generates warm, validating feedback for a completed CBT thought reframing worksheet."""
     prompt = (
         f"Act as a CBT reflection companion. The user filled out a reframing worksheet:\n"
@@ -235,7 +262,7 @@ def generate_cbt_feedback(automatic_thought: str, evidence_against: str, balance
         f"- Balanced Thought: {balanced_thought}\n\n"
         f"Provide 2-3 sentences of warm validation praising their effort to reframe and affirming their balanced thought."
     )
-    return call_ai(
+    return await call_ai(
         prompt,
         fallback="Great work reframing! You identified the evidence against your automatic thought and established a balanced perspective."
     )

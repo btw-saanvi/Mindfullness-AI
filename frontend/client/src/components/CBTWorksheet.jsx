@@ -49,12 +49,12 @@ const CBTWorksheet = ({ isOpen, onClose, onComplete }) => {
       <div className="cbt-modal-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Brain style={{ color: '#7dd3fc', width: 22, height: 22 }} />
-            <h2 style={{ fontFamily: 'Outfit', fontSize: '1.35rem', margin: 0, color: '#f8fafc' }}>
+            <Brain style={{ color: 'var(--accent)', width: 22, height: 22 }} />
+            <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: '1.35rem', margin: 0, color: 'var(--ink)' }}>
               CBT Thought Reframing Worksheet
             </h2>
           </div>
-          <button onClick={handleReset} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+          <button onClick={handleReset} style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer' }}>
             <X style={{ width: 20, height: 20 }} />
           </button>
         </div>
@@ -70,10 +70,10 @@ const CBTWorksheet = ({ isOpen, onClose, onComplete }) => {
 
         {step === 1 && (
           <div>
-            <label style={{ color: '#cbd5e1', fontSize: '0.95rem', fontWeight: 500, display: 'block' }}>
+            <label style={{ color: 'var(--ink-soft)', fontSize: '0.95rem', fontWeight: 500, display: 'block' }}>
               Step 1: What is the troubling or automatic thought?
             </label>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: '4px 0 10px 0' }}>
+            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: '4px 0 10px 0' }}>
               Write out the exact negative thought as it occurred in your mind.
             </p>
             <textarea
@@ -97,10 +97,10 @@ const CBTWorksheet = ({ isOpen, onClose, onComplete }) => {
 
         {step === 2 && (
           <div>
-            <label style={{ color: '#cbd5e1', fontSize: '0.95rem', fontWeight: 500, display: 'block' }}>
+            <label style={{ color: 'var(--ink-soft)', fontSize: '0.95rem', fontWeight: 500, display: 'block' }}>
               Step 2: What is the evidence against this thought?
             </label>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: '4px 0 10px 0' }}>
+            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: '4px 0 10px 0' }}>
               What objective facts or past experiences contradict this negative assumption?
             </p>
             <textarea
@@ -127,10 +127,10 @@ const CBTWorksheet = ({ isOpen, onClose, onComplete }) => {
 
         {step === 3 && (
           <div>
-            <label style={{ color: '#cbd5e1', fontSize: '0.95rem', fontWeight: 500, display: 'block' }}>
+            <label style={{ color: 'var(--ink-soft)', fontSize: '0.95rem', fontWeight: 500, display: 'block' }}>
               Step 3: What is a more balanced, grounded thought?
             </label>
-            <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: '4px 0 10px 0' }}>
+            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: '4px 0 10px 0' }}>
               Combine the situation and evidence into a realistic, compassionate perspective.
             </p>
             <textarea
@@ -156,22 +156,22 @@ const CBTWorksheet = ({ isOpen, onClose, onComplete }) => {
 
         {step === 4 && (
           <div style={{ textAlign: 'center', padding: '10px 0' }}>
-            <CheckCircle2 style={{ width: 44, height: 44, color: '#7dd3fc', margin: '0 auto 12px auto' }} />
-            <h3 style={{ fontFamily: 'Outfit', color: '#f8fafc', fontSize: '1.25rem', marginBottom: 12 }}>
+            <CheckCircle2 style={{ width: 44, height: 44, color: 'var(--accent)', margin: '0 auto 12px auto' }} />
+            <h3 style={{ fontFamily: 'Syne, sans-serif', color: 'var(--ink)', fontSize: '1.25rem', marginBottom: 12 }}>
               Reframing Completed!
             </h3>
             <div style={{
-              background: 'rgba(147,197,253,0.1)',
-              border: '1px solid rgba(147,197,253,0.25)',
+              background: 'var(--accent-soft)',
+              border: '1px solid rgba(26,122,98,0.25)',
               borderRadius: 12,
               padding: 16,
-              color: '#cbd5e1',
+              color: 'var(--ink-soft)',
               fontSize: '0.92rem',
               lineHeight: 1.6,
               textAlign: 'left',
               marginBottom: 20
             }}>
-              <div style={{ fontWeight: 600, color: '#7dd3fc', marginBottom: 6 }}>MindfulAI Insight:</div>
+              <div style={{ fontWeight: 600, color: 'var(--accent)', marginBottom: 6 }}>MindfulAI Insight:</div>
               {analysis}
             </div>
 

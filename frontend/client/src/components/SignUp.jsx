@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { setUser } from '../utils/auth';
+import { setUser, setToken, parseJwt } from '../utils/auth';
+import { GoogleLogin } from '@react-oauth/google';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Logo from './Logo';
 
@@ -24,6 +25,16 @@ const SignUp = () => {
     if (form.password !== form.confirmPassword) return setError('Passwords do not match');
     if (!agreeToTerms) return setError('Please accept the Terms of Service and Privacy Policy');
     const user = { id: `user_${Date.now()}`, name: form.name, email: form.email };
+    setUser(user);
+    navigate('/chat');
+  };
+
+  const onGoogleSuccess = (credentialResponse) => {
+    const idToken = credentialResponse?.credential;
+    if (!idToken) return;
+    setToken(idToken);
+    const payload = parseJwt(idToken) || {};
+    const user = { id: payload.sub, name: payload.name || payload.given_name || 'User', email: payload.email };
     setUser(user);
     navigate('/chat');
   };
@@ -127,6 +138,20 @@ const SignUp = () => {
           <button className="create-account-btn" type="submit">
             Create Account
           </button>
+
+          <div className="auth-divider">
+            <span>OR</span>
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'center', margin: '14px 0' }}>
+            <GoogleLogin 
+              onSuccess={onGoogleSuccess} 
+              onError={() => setError('Google Sign-In failed')} 
+              useOneTap
+              theme="filled_black"
+              shape="pill"
+            />
+          </div>
 
           <div className="auth-footer">
             Already have an account? <span className="auth-link" onClick={() => navigate('/signin')}>Sign in</span>

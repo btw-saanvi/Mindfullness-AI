@@ -8,10 +8,10 @@ const SessionEntryModal = ({ isOpen, onClose, onStartSession }) => {
   if (!isOpen) return null;
 
   const getMoodConfig = (score) => {
-    if (score <= 3) return { icon: CloudRain, text: 'Feeling heavy / anxious', color: '#94a3b8' };
-    if (score <= 6) return { icon: Cloud, text: 'Feeling neutral / okay', color: '#93c5fd' };
-    if (score <= 8) return { icon: CloudSun, text: 'Feeling calm / grounded', color: '#7dd3fc' };
-    return { icon: Sun, text: 'Feeling bright / positive', color: '#38bdf8' };
+    if (score <= 3) return { icon: CloudRain, text: 'Feeling heavy / anxious', color: 'var(--muted)' };
+    if (score <= 6) return { icon: Cloud, text: 'Feeling neutral / okay', color: 'var(--accent)' };
+    if (score <= 8) return { icon: CloudSun, text: 'Feeling calm / grounded', color: 'var(--accent)' };
+    return { icon: Sun, text: 'Feeling bright / positive', color: 'var(--accent)' };
   };
 
   const currentMood = getMoodConfig(moodScore);
@@ -26,17 +26,17 @@ const SessionEntryModal = ({ isOpen, onClose, onStartSession }) => {
     <div className="breathing-modal-overlay">
       <div className="cbt-modal-card" style={{ maxWidth: 480 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-          <h2 style={{ fontFamily: 'Outfit', fontSize: '1.4rem', margin: 0, color: '#f8fafc' }}>
+          <h2 style={{ fontFamily: 'Syne, sans-serif', fontSize: '1.4rem', margin: 0, color: 'var(--ink)' }}>
             Start a Reflection Session
           </h2>
-          <button onClick={onClose} style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer' }}>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', color: 'var(--muted)', cursor: 'pointer' }}>
             <X style={{ width: 20, height: 20 }} />
           </button>
         </div>
 
         {/* Pick Need */}
         <div style={{ marginBottom: 24 }}>
-          <label style={{ color: '#cbd5e1', fontSize: '0.92rem', fontWeight: 500, display: 'block', marginBottom: 10 }}>
+          <label style={{ color: 'var(--ink-soft)', fontSize: '0.92rem', fontWeight: 500, display: 'block', marginBottom: 10 }}>
             What is your primary need right now?
           </label>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
@@ -55,16 +55,16 @@ const SessionEntryModal = ({ isOpen, onClose, onStartSession }) => {
                   style={{
                     padding: 14,
                     borderRadius: 12,
-                    border: isSel ? '1px solid #7dd3fc' : '1px solid rgba(255,255,255,0.08)',
-                    background: isSel ? 'rgba(125,211,252,0.15)' : 'rgba(255,255,255,0.03)',
-                    color: '#f8fafc',
+                    border: isSel ? '1px solid var(--accent)' : '1px solid var(--line)',
+                    background: isSel ? 'var(--accent-soft)' : 'var(--bg)',
+                    color: 'var(--ink)',
                     textAlign: 'left',
                     cursor: 'pointer'
                   }}
                 >
-                  <Icon style={{ width: 20, height: 20, color: isSel ? '#7dd3fc' : '#94a3b8', marginBottom: 6 }} />
-                  <div style={{ fontWeight: 600, fontSize: '0.92rem', color: isSel ? '#7dd3fc' : '#f8fafc' }}>{item.title}</div>
-                  <div style={{ color: '#94a3b8', fontSize: '0.78rem' }}>{item.desc}</div>
+                  <Icon style={{ width: 20, height: 20, color: isSel ? 'var(--accent)' : 'var(--muted)', marginBottom: 6 }} />
+                  <div style={{ fontWeight: 600, fontSize: '0.92rem', color: isSel ? 'var(--accent)' : 'var(--ink)' }}>{item.title}</div>
+                  <div style={{ color: 'var(--muted)', fontSize: '0.78rem' }}>{item.desc}</div>
                 </button>
               );
             })}
@@ -72,9 +72,9 @@ const SessionEntryModal = ({ isOpen, onClose, onStartSession }) => {
         </div>
 
         {/* Mood Slider */}
-        <div style={{ marginBottom: 28, background: 'rgba(255,255,255,0.03)', padding: 18, borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)' }}>
+        <div style={{ marginBottom: 28, background: 'var(--bg)', padding: 18, borderRadius: 12, border: '1px solid var(--line)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-            <span style={{ color: '#cbd5e1', fontSize: '0.9rem', fontWeight: 500 }}>Daily Mood Check-in:</span>
+            <span style={{ color: 'var(--ink-soft)', fontSize: '0.9rem', fontWeight: 500 }}>Daily Mood Check-in:</span>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: currentMood.color, fontWeight: 600, fontSize: '0.95rem' }}>
               <MoodIcon style={{ width: 18, height: 18 }} />
               {moodScore}/10
@@ -89,13 +89,13 @@ const SessionEntryModal = ({ isOpen, onClose, onStartSession }) => {
             onChange={(e) => setMoodScore(parseInt(e.target.value))}
             style={{
               width: '100%',
-              accentColor: '#7dd3fc',
+              accentColor: 'var(--accent)',
               cursor: 'pointer',
               marginBottom: 8
             }}
           />
 
-          <div style={{ textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem' }}>
+          <div style={{ textAlign: 'center', color: 'var(--muted)', fontSize: '0.85rem' }}>
             {currentMood.text}
           </div>
         </div>

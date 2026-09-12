@@ -1,19 +1,17 @@
 import React from 'react';
 
-const Logo = ({ size = 'medium', showText = true, onClick }) => {
-  const iconSizes = {
-    small: 26,
-    medium: 34,
-    large: 46
-  };
-
-  const fontSizes = {
-    small: '1.1rem',
-    medium: '1.35rem',
-    large: '1.8rem'
-  };
-
+const Logo = ({ size = 'medium', showText = true, onClick, variant = 'light' }) => {
+  const iconSizes = { small: 26, medium: 34, large: 46 };
+  const fontSizes = { small: '1.05rem', medium: '1.28rem', large: '1.7rem' };
   const currentSize = iconSizes[size] || iconSizes.medium;
+  const isDark = variant === 'dark' || variant === 'sky';
+  const textColor = isDark ? '#ffffff' : '#0c0d10';
+  const iconBg =
+    variant === 'sky'
+      ? 'linear-gradient(135deg, #ffffff 0%, #e8f4ef 100%)'
+      : isDark
+        ? 'linear-gradient(135deg, #1a7a62 0%, #146652 100%)'
+        : 'linear-gradient(135deg, #1a7a62 0%, #0c0d10 100%)';
 
   return (
     <div
@@ -26,38 +24,37 @@ const Logo = ({ size = 'medium', showText = true, onClick }) => {
           width: currentSize,
           height: currentSize,
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #7dd3fc 0%, #38bdf8 50%, #60a5fa 100%)',
+          background: iconBg,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          boxShadow: '0 0 16px rgba(125, 211, 252, 0.35)',
-          flexShrink: 0
+          flexShrink: 0,
         }}
       >
         <svg
-          width={currentSize * 0.6}
-          height={currentSize * 0.6}
+          width={currentSize * 0.55}
+          height={currentSize * 0.55}
           viewBox="0 0 24 24"
           fill="none"
-          stroke="#0b1329"
+          stroke={variant === 'sky' ? '#1a7a62' : '#ffffff'}
           strokeWidth="2.2"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z" />
-          <path d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z" />
-          <circle cx="12" cy="12" r="2" fill="#0b1329" />
+          <circle cx="12" cy="12" r="9" />
+          <circle cx="12" cy="12" r="4" />
+          <circle cx="12" cy="12" r="1.5" fill={variant === 'sky' ? '#1a7a62' : '#ffffff'} />
         </svg>
       </div>
 
       {showText && (
         <span
           style={{
-            fontFamily: 'Outfit, sans-serif',
+            fontFamily: 'Syne, sans-serif',
             fontSize: fontSizes[size] || fontSizes.medium,
-            fontWeight: 600,
-            color: '#f8fafc',
-            letterSpacing: '-0.3px'
+            fontWeight: 700,
+            color: textColor,
+            letterSpacing: '-0.04em',
           }}
         >
           MindfulAI

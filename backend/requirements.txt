@@ -3,3 +3,7 @@ uvicorn
 google-generativeai
 python-dotenv
 google-auth
+openai
+pytest
+httpx
+pytest-asyncio

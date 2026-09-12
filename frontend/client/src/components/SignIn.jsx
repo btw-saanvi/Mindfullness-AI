@@ -29,10 +29,31 @@ const SignIn = () => {
     navigate('/chat');
   };
 
-  const onGoogleSuccess = (credentialResponse) => {
+  const onGoogleSuccess = async (credentialResponse) => {
     const idToken = credentialResponse?.credential;
     if (!idToken) return;
     setToken(idToken);
+
+    try {
+      // Verify token server-side
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const res = await fetch(`${apiUrl}/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id_token: idToken }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const user = { id: data.user.id, name: data.user.name, email: data.user.email, picture: data.user.picture };
+        setUser(user);
+        navigate('/chat');
+        return;
+      }
+    } catch (e) {
+      console.warn('Backend token verification unavailable, using local parsing.');
+    }
+
+    // Fallback: local JWT parsing
     const payload = parseJwt(idToken) || {};
     const user = { id: payload.sub, name: payload.name || payload.given_name || 'User', email: payload.email };
     setUser(user);
