@@ -16,7 +16,7 @@ GROQ_API_KEY = os.getenv("GROQ_API_KEY") or os.getenv("GROK_API_KEY")
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID", "")
 
 # AI Service Configuration
-GROQ_MODEL_NAME = os.getenv("GROQ_MODEL_NAME", "llama-3.1-8b-instant")
+GROQ_MODEL_NAME = os.getenv("GROQ_MODEL_NAME", "openai/gpt-oss-20b")
 AI_MODEL_NAME = os.getenv("AI_MODEL_NAME", "gemini-1.5-flash")
 MAX_MESSAGE_LENGTH = 5000
 

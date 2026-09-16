@@ -9,6 +9,7 @@ import SignUp from './components/SignUp';
 import OnboardingModal from './components/OnboardingModal';
 import BreathingExercise from './components/BreathingExercise';
 import CBTWorksheet from './components/CBTWorksheet';
+import ProfileSettings from './components/ProfileSettings';
 import { isLoggedIn } from './utils/auth';
 import './App.css';
 
@@ -97,6 +98,14 @@ function App() {
             element={
               <PrivateRoute>
                 <SessionHistory />
+              </PrivateRoute>
+            } 
+          />
+          <Route 
+            path="/profile" 
+            element={
+              <PrivateRoute>
+                <ProfileSettings />
               </PrivateRoute>
             } 
           />

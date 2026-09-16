@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, TrendingUp, Calendar, Heart, Brain, Wind, Plus, Sparkles, RefreshCw } from 'lucide-react';
+import { ArrowLeft, TrendingUp, Calendar, Heart, Brain, Wind, Plus, Sparkles, RefreshCw, Settings, LogOut } from 'lucide-react';
 import axios from 'axios';
 import Logo from './Logo';
+import { getUser, clearUser } from '../utils/auth';
 
 const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
   const navigate = useNavigate();
+  const user = getUser();
+  const initials = (user?.name || 'U').split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
   const [data, setData] = useState(null);
   const [affirmation, setAffirmation] = useState('');
   const [isAffirmationLoading, setIsAffirmationLoading] = useState(true);
@@ -56,17 +59,28 @@ const MoodDashboard = ({ onOpenBreathing, onOpenCBT }) => {
           <button className="back-button light" onClick={() => navigate('/')} title="Home">
             <ArrowLeft style={{ width: 18, height: 18 }} />
           </button>
-          <span className="product-dot" style={{ background: 'rgba(12, 13, 16, 0.18)' }} />
-          <span className="product-dot" style={{ background: 'rgba(12, 13, 16, 0.18)' }} />
-          <span className="product-dot" style={{ background: 'rgba(12, 13, 16, 0.18)' }} />
           <Logo size="small" onClick={() => navigate('/')} />
-          <span style={{ marginLeft: 8, color: 'var(--muted)', fontSize: '0.8rem', fontWeight: 500 }}>MindfulAI / Dashboard</span>
+          <span style={{ marginLeft: 4, color: 'var(--muted)', fontSize: '0.8rem', fontWeight: 500 }}>Dashboard</span>
         </div>
 
-        <button className="btn-pastel-blue" onClick={() => navigate('/chat')}>
-          <Plus style={{ width: 16, height: 16 }} />
-          New Reflection Session
-        </button>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button className="btn-pastel-blue" onClick={() => navigate('/chat')}>
+            <Plus style={{ width: 16, height: 16 }} />
+            New Session
+          </button>
+          <button
+            className="dashboard-profile-btn"
+            onClick={() => navigate('/profile')}
+            title="Profile & Settings"
+          >
+            {user?.picture ? (
+              <img src={user.picture} alt={user.name} style={{ width: 32, height: 32, borderRadius: '50%', objectFit: 'cover' }} />
+            ) : (
+              <div className="dash-avatar-initials">{initials}</div>
+            )}
+            <Settings style={{ width: 14, height: 14, color: 'var(--muted)' }} />
+          </button>
+        </div>
       </div>
 
       <div className="dash-stats-row">

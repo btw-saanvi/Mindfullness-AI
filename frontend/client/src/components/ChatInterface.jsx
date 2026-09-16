@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Heart, Lightbulb, Brain, Leaf, History, ShieldAlert, CheckCircle2, Target, Wind } from 'lucide-react';
 import axios from 'axios';
