@@ -52,7 +52,7 @@ MindfulAI is an empathetic, AI-powered reflection companion designed to give ind
 
 ## 4. Screenshots / Demo
 
-![MindfulAI Landing Page](./frontend/client/src/assets/landingbg.jpeg)
+![MindfulAI Chat Page](./frontend/client/src/assets/chat.png)
 
 ## 5. Tech Stack
 
